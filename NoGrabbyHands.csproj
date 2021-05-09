@@ -27,10 +27,10 @@
         <Private>false</Private>
         <HintPath>$(MsBuildThisFileDirectory)\..\Libs\Assembly-CSharp.dll</HintPath>
       </Reference>
+      <Reference Include="VRCSDKBase, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <SpecificVersion>false</SpecificVersion>
+        <Private>false</Private>
+        <HintPath>$(MsBuildThisFileDirectory)\..\Libs\VRCSDKBase.dll</HintPath>
+      </Reference>
     </ItemGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="copy /Y &quot;$(TargetDir)\$(TargetFileName)&quot; &quot;F:\SteamLibrary\steamapps\common\VRChat\Mods\$(TargetFileName)&quot;" />
-    </Target>
-
 </Project>
