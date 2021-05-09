@@ -18,10 +18,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\UIExpansionKit\UIExpansionKit.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <SpecificVersion>false</SpecificVersion>
         <Private>false</Private>
@@ -31,6 +27,11 @@
         <SpecificVersion>false</SpecificVersion>
         <Private>false</Private>
         <HintPath>$(MsBuildThisFileDirectory)\..\Libs\VRCSDKBase.dll</HintPath>
+      </Reference>
+      <Reference Include="UIExpansionKit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <SpecificVersion>false</SpecificVersion>
+        <Private>false</Private>
+        <HintPath>$(MsBuildThisFileDirectory)\..\Libs\UIExpansionKit.dll</HintPath>
       </Reference>
     </ItemGroup>
 </Project>
