@@ -1,11 +1,9 @@
-﻿using System;
+﻿using MelonLoader;
+using System;
 using System.Collections;
-using UIExpansionKit.API;
-using MelonLoader;
 using UnityEngine;
-using VRC;
 
-namespace NoGrabbyHands 
+namespace NoGrabbyHands
 {
     public class NoGrabbyHands : MelonMod
     {
@@ -23,8 +21,8 @@ namespace NoGrabbyHands
         public override void OnApplicationStart()
         {
             MelonPreferences.CreateCategory(Pref_CategoryName);
-            MelonPreferences.CreateEntry(Pref_CategoryName, nameof(Pref_DisableGrab),       false,  "Disable grab");
-            MelonPreferences.CreateEntry(Pref_CategoryName, nameof(Pref_DebugOutput),       false,  "Enable debug output");
+            MelonPreferences.CreateEntry(Pref_CategoryName, nameof(Pref_DisableGrab), false, "Disable grab");
+            MelonPreferences.CreateEntry(Pref_CategoryName, nameof(Pref_DebugOutput), false, "Enable debug output");
             MelonLogger.Msg("Initialized!");
         }
 
@@ -32,13 +30,16 @@ namespace NoGrabbyHands
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             base.OnSceneWasLoaded(buildIndex, sceneName);
-            switch (buildIndex) {
+            switch (buildIndex)
+            {
                 case 0:
                     isLoading = true;
-                    break; 
+                    break;
+
                 case 1:
                     isLoading = true;
-                    break;  
+                    break;
+
                 default:
                     isLoading = false;
                     ApplyAllSettings();
@@ -50,18 +51,21 @@ namespace NoGrabbyHands
         {
             ApplyAllSettings();
         }
+
         private void UpdatePreferences()
         {
-            Pref_DisableGrab       = MelonPreferences.GetEntryValue<bool>(Pref_CategoryName, nameof(Pref_DisableGrab));
-            Pref_DebugOutput       = MelonPreferences.GetEntryValue<bool>(Pref_CategoryName, nameof(Pref_DebugOutput));
+            Pref_DisableGrab = MelonPreferences.GetEntryValue<bool>(Pref_CategoryName, nameof(Pref_DisableGrab));
+            Pref_DebugOutput = MelonPreferences.GetEntryValue<bool>(Pref_CategoryName, nameof(Pref_DebugOutput));
         }
+
         private void ApplyAllSettings()
         {
             UpdatePreferences();
             ClearAllReferences(); // might be unnecessary to clear first
             // Wait for player to load to apply beam settings
-            MelonCoroutines.Start(WaitUntilPlayerIsLoadedToApplyTetherSettings());
+            MelonCoroutines.Start(GrabSettingsCoroutine());
         }
+
         private void ToggleGrabEnabled(bool enabled)
         {
             try
@@ -70,52 +74,55 @@ namespace NoGrabbyHands
                 rightHandGrasper.enabled = enabled;
                 LogDebugMsg("Graspers " + (enabled ? "enabled" : "disabled"));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MelonLogger.Error(e.Message);
             }
         }
+
         private VRCHandGrasper GetHandGrasper(GameObject effector)
         {
             var handGrasper = effector.GetComponent<VRCHandGrasper>();
             return handGrasper;
         }
+
         private bool GrasperIsGrabbing(VRCHandGrasper grasper)
         {
-            if(grasper == null)
+            if (grasper == null)
             {
                 return false;
             }
             return grasper.field_Internal_VRC_Pickup_0 != null;
         }
-        private IEnumerator WaitUntilPlayerIsLoadedToApplyTetherSettings()
+
+        private IEnumerator GrabSettingsCoroutine()
         {
-            while(isLoading)
+            while (isLoading)
             {
                 LogDebugMsg("Waiting for scene to load...");
                 yield return new WaitForSeconds(5.0f);
             }
 
-            while(VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
+            while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
             {
                 yield return null;
             }
             LogDebugMsg("VRCPlayer valid! Setting effector references...");
 
-            while(!SetEffectorReferences())
+            while (!SetEffectorReferences())
             {
                 yield return new WaitForSeconds(1.0f);
             }
 
             LogDebugMsg("Effector references set! Setting grasper references...");
 
-            while(!SetGrasperReferences())
+            while (!SetGrasperReferences())
             {
                 yield return new WaitForSeconds(1.0f);
             }
             LogDebugMsg("Grasper references set! Toggling grab");
 
-            while(GrasperIsGrabbing(leftHandGrasper) || GrasperIsGrabbing(rightHandGrasper))
+            while (GrasperIsGrabbing(leftHandGrasper) || GrasperIsGrabbing(rightHandGrasper))
             {
                 yield return null;
             }
@@ -125,13 +132,13 @@ namespace NoGrabbyHands
 
         private bool ValidateGrabReferences()
         {
-            return (leftHandTether != null && rightHandTether != null 
+            return (leftHandTether != null && rightHandTether != null
                 && leftHandGrasper != null && rightHandGrasper != null);
         }
 
         private bool SetEffectorReferences()
         {
-            if(leftHandTether != null && rightHandTether != null)
+            if (leftHandTether != null && rightHandTether != null)
             {
                 return true;
             }
@@ -142,25 +149,26 @@ namespace NoGrabbyHands
                 rightHandTether = GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/RightEffector").gameObject;
                 return (leftHandTether != null && rightHandTether != null);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MelonLogger.Error(e.ToString());
                 return false;
             }
         }
+
         private bool SetGrasperReferences()
         {
-            if(leftHandGrasper != null && rightHandGrasper != null)
+            if (leftHandGrasper != null && rightHandGrasper != null)
             {
                 return true;
             }
-            try 
+            try
             {
-                leftHandGrasper  = GetHandGrasper(leftHandTether);
+                leftHandGrasper = GetHandGrasper(leftHandTether);
                 rightHandGrasper = GetHandGrasper(rightHandTether);
                 return (leftHandGrasper != null && rightHandGrasper != null);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MelonLogger.Error(e.ToString());
                 return false;
@@ -169,21 +177,21 @@ namespace NoGrabbyHands
 
         private void SetGrabReferences()
         {
-            try 
+            try
             {
                 VRCPlayer player = VRCPlayer.field_Internal_Static_VRCPlayer_0; // is not null
-                leftHandTether   = GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/LeftEffector").gameObject;
-                rightHandTether  = GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/RightEffector").gameObject;
-                leftHandGrasper  = GetHandGrasper(leftHandTether);
+                leftHandTether = GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/LeftEffector").gameObject;
+                rightHandTether = GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/RightEffector").gameObject;
+                leftHandGrasper = GetHandGrasper(leftHandTether);
                 rightHandGrasper = GetHandGrasper(rightHandTether);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MelonLogger.Error(e.ToString());
             }
             finally
             {
-                if(ValidateGrabReferences())
+                if (ValidateGrabReferences())
                 {
                     LogDebugMsg("Found effectors: " + leftHandTether.name + "," + rightHandTether.name);
                 }
@@ -193,6 +201,7 @@ namespace NoGrabbyHands
                 }
             }
         }
+
         private void ClearAllReferences()
         {
             LogDebugMsg("Clearing object references.");
@@ -206,10 +215,9 @@ namespace NoGrabbyHands
         {
             if (!Pref_DebugOutput)
             {
-                return; 
+                return;
             }
             MelonLogger.Msg(msg);
         }
-        
     }
 }
