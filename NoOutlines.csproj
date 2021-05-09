@@ -29,4 +29,8 @@
       </Reference>
     </ItemGroup>
 
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="copy /Y &quot;$(TargetDir)\$(TargetFileName)&quot; &quot;F:\SteamLibrary\steamapps\common\VRChat\Mods\$(TargetFileName)&quot;" />
+    </Target>
+
 </Project>
