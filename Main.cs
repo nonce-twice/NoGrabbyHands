@@ -9,7 +9,7 @@ namespace NoGrabbyHands
 {
     public class NoGrabbyHands : MelonMod
     {
-        public const string Pref_CategoryName = "No Grabby Hands";
+        public const string Pref_CategoryName = "NoGrabbyHands";
         public bool Pref_DisableGrab = false;
         public bool Pref_DebugOutput = false;
 
