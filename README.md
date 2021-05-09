@@ -1,15 +1,15 @@
-# No Outlines
-## Mod for VRChat Build 1048
+# No Grabby Hands
+## Mod for VRChat Build 1094
 
 ### Description
-The cyan outlines around pickupable objects overrender everything in the game, causing disorientation and lessened immersion.  
-This mod adds options to toggle off the outline around pickupable objects and the dashed line pointing to them.  
+This mod allows you to toggle on/off grabbing of pickupable objects.
+Useful if you find yourself accidentally grabbing objects all the time.
+Companion mod to NoOutlines[https://github.com/nonce-twice/NoOutlines](https://github.com/nonce-twice/NoOutlines)
 
 ### Example MelonPreferences.cfg
 ```
-[NoOutlines]
-Pref_DisableOutlines = false 	# Disables the blue outline around highlighted pickups 
-Pref_DisableBeam     = false    # Disables the dashed line pointing towards highlighted pickups
+[NoGrabbyHands]
+Pref_DisableGrab     = false    # Disables grabbing of pickupable objects
 Pref_DebugOutput     = false    # Enables debug output in the MelonLoader console
 ```
 
@@ -18,19 +18,7 @@ UIExpansionKit by Knah [link](https://github.com/knah/VRCMods)
 MelonLoader 0.3.0
 
 ### Build Info
-Place Assembly-CSharp.dll in Libs/  
-UIExpansionKit is on the same folder level 
-
-#### Example Folder Hierarchy
-* ---Root Folder---  
-  * UIExpansionKit  
-  * NoOutlines   
-    * Libs  
-	  * Assembly-CSharp.dll  
+Place Assembly-CSharp.dll, VRCSDKBase.dll, UIExpansionKit.dll in Libs/  
 
 ### Credits
 VRChat Modding Group
-
-
-#### Soapbox
-Avoid closed-source mods.
